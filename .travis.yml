@@ -4,11 +4,10 @@ notifications:
 env:
   global:
   - TERM=dumb
+  - secure: Ckw0D/xPkbfJlfJBKyaax7V+WCzxV6YhPhyxrn+B+iJFRzGWfQpShCuX7lMbOUCyY6DfH5WdtE2U6LA5fAcFu1zx4dwvucftNuJ7v4u1pqEJpFUbMsmi/A+ejuKQskGGAXnWXsbwV0UWww3kxODSkje6KjCtqvOSimNd3IFPZ0NFq3ckmnGcZNUuIaNUDIvb18XO/0WO+FQwsjAkwdXe0A01YDVF2M5YzSUqJ9d/3X+eS2YOgDINvsaqgX3Ypa2BaJLpswFn87bNQzjhHPFwULYIe4+rUvLweiHAi4oBP7LMBnhfQbBRv0hm7Ai1ZcVlFnd53n5U5CbCKVdGLns5umumzIa2Cd8LsSLYKpL8o3RgX9Z7NQJByZ7ALgTOgLOOcQTcHtRcXsECUGRr7Kzwp5hMAotCVouBrLuUfZNzaeqketklsWuwJnISuEvergNPBQ8f3XA9Bhhi/0Mw83Ky++itp2Fyeb/TbKyvo3iv1OUSXi5zf0R+qt6X6plG8a3jWPR+QUcnF5kHR7Mc7J/7PIhKzjSw9bxbp1Z63YThv35ddJruXcTNLgGflLuaLUb1u4YiCclOYBcTk/xFPZa0x1LLoBrbHEl3oSL5lDzgq0cHiPPi4pUmIppiFEsT8Hlka3gnji/y7ewKzvP+OPMThaaOO6lPLi4VrRpyUWN7oE4=
 
 language: java
-jdk:
-- oraclejdk8
-#- oraclejdk10
+jdk: oraclejdk10
 
 service:
 - docker
@@ -52,12 +51,10 @@ before_install:
 
 script:
 - export root=$(pwd)
-- bash mvnw
-- bash gradlew
+- bash mvnw >/dev/null
 
 before_deploy:
 - cd ${root}
-#- ./gradlew documentation
 - ./mvnw -Pdocs
 - mkdir -p ./target/generated-docs
 - cp -Rf ./target/generated-docs/index.html ./target/generated-docs/404.html
@@ -73,13 +70,7 @@ deploy:
   local-dir: target/generated-docs
   target_branch: gh-pages
 
-before_cache:
-- for item in $(find ~/.gradle -name "*.lock");
-    do sudo rm -rf $item ;
-  done
-
 cache:
   directories:
   - $HOME/.m2
-  - $HOME/.gradle
   - $HOME/.docker
